@@ -3,12 +3,15 @@ project(MyProject)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# Dodaj client
+# client
 add_executable(client
     client/main.cpp
+    client/Client.cpp
 )
 
-# Dodaj server
+# server
 add_executable(server
     server/main.cpp
+    server/Server.cpp
+    server/ClientHandler.cpp
 )
