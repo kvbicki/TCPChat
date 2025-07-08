@@ -17,13 +17,15 @@ int main() {
 
     std::cout << "Client program started\n";
 
-    while(true){
-        std::string msg;
+    std::string msg;
+    while(msg != "quit"){
+        
         std::getline(std::cin, msg);
         if (!client.SendMessage(msg)) {
             std::cerr << "Failed to send message\n";
         }
     }
+    std::cout << "Bye!" << std::endl;
     client.Close();
 
     return 0;

@@ -35,6 +35,7 @@ bool Server::Setup() {
 
     if (bind(listenSocket, reinterpret_cast<sockaddr*>(&serverAddr), sizeof(serverAddr)) == SOCKET_ERROR) {
         std::cerr << "Bind failed" << std::endl;
+        closesocket(listenSocket);
         return false;
     }
 
@@ -54,9 +55,13 @@ void Server::Run() {
             std::cerr << "Accept failed" << std::endl;
             continue;
         }
+
         std::cout << "Client connected!" << std::endl;
 
-        ClientHandler handler(clientSocket);
-        handler.HandleClient();
+        std::thread t([clientSocket]() {
+            ClientHandler handler(clientSocket);
+            handler.HandleClient();
+        });
+        t.detach();
     }
 }
