@@ -10,7 +10,7 @@ void receiveThreadFunc(Client& client) {
     std::string msgr;
     while (running) {
         if (!client.ReceiveMessage(msgr)) {
-            std::cerr << "Failed to receive message or connection closed.\n";
+            std::cerr << "Connection closed.\n";
             running = false;
             break;
         }
@@ -22,13 +22,14 @@ void sendThreadFunc(Client& client) {
     std::string msgs;
     while (running) {
         std::getline(std::cin, msgs);
-        if (msgs == "quit") {
-            client.Close();
+
+        if (!client.SendMessage(msgs)) {
+            std::cerr << "Failed to send message\n";
             running = false;
             break;
         }
-        if (!client.SendMessage(msgs)) {
-            std::cerr << "Failed to send message\n";
+        if (msgs == "quit") {
+            client.Close();
             running = false;
             break;
         }
@@ -57,5 +58,6 @@ int main() {
     running = false;
     receiver.join();
 
+    client.Close();
     return 0;
 }
