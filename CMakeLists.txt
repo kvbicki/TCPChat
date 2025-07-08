@@ -6,6 +6,7 @@ set(CMAKE_CXX_STANDARD 17)
 # client
 add_executable(client
     client/main.cpp
+    client/Client.cpp
 )
 
 # server
