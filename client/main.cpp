@@ -17,14 +17,26 @@ int main() {
 
     std::cout << "Client program started\n";
 
-    std::string msg;
-    while(msg != "quit"){
-        
-        std::getline(std::cin, msg);
-        if (!client.SendMessage(msg)) {
+    std::string msgs;
+    std::string msgr;
+
+    while (true) {
+        if (!client.ReceiveMessage(msgr)) {
+            std::cerr << "Failed to receive message or connection closed.\n";
+            break;
+        }
+
+        std::cout << "Server: " << msgr << std::endl;
+
+        std::getline(std::cin, msgs);
+        if (msgs == "quit") break;
+
+        if (!client.SendMessage(msgs)) {
             std::cerr << "Failed to send message\n";
+            break;
         }
     }
+
     std::cout << "Bye!" << std::endl;
     client.Close();
 

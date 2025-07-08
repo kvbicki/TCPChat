@@ -10,6 +10,7 @@ public:
     bool Initialize();
     bool Connect();
     bool SendMessage(const std::string& message);
+    bool ReceiveMessage(std::string& message);
     void Close();
 
 private:
