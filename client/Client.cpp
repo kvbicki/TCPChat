@@ -66,8 +66,6 @@ bool Client::ReceiveMessage(std::string& message) {
         return true;
     } else if (bytesReceived == 0) {
         std::cerr << "Connection closed by server\n";
-    } else {
-        std::cerr << "Receive failed\n";
     }
     return false;
 }
