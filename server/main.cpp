@@ -4,24 +4,15 @@
 using namespace std;
 #pragma comment(lib,"ws2_32.lib")
 
-/*
-    initialize winsock library
-    create the socket
-    get ip and port
-    bind the ip/port with the socket
-    listen on the socket
-    accept
-    recv and send
-    close the socket
-    cleanup the winsock
-*/
 bool Initialize(){
     WSADATA data;
     return WSAStartup(MAKEWORD(2,2), &data) == 0;
 }
 int main(){
+
+    //initialization
     if(!Initialize()){
-        cout << "winsock initialization failed " << endl;
+        cout << "initialization failed " << endl;
         return 1;
     }
 
@@ -37,7 +28,7 @@ int main(){
     serveraddr.sin_family = AF_INET;
     serveraddr.sin_port = htons(port);
 
-    //convert the ipaddress (0.0.0.0) put it inside the sin_family in binary form
+    //inet_pton
     if(inet_pton(AF_INET, ("0.0.0.0"), &serveraddr.sin_addr) != 1){
         cout << "setting address structure failed" << endl;
         closesocket(listenSocket);
@@ -70,8 +61,9 @@ int main(){
     int bytesrecvd = recv(clientSocket,buffer,sizeof(buffer), 0);
 
     string message(buffer,bytesrecvd);
-    cout << "message from clien: " << message << endl;
-    
+    cout << "message from client: " << message << endl;
+
+    //closing
     closesocket(clientSocket);
     closesocket(listenSocket);
     WSACleanup();
