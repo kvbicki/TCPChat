@@ -1,4 +1,4 @@
-#include "clientHandler.h"
+#include "ClientHandler.h"
 #include <iostream>
 
 ClientHandler::ClientHandler(SOCKET socket) : clientSocket(socket) {}

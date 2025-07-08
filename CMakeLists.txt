@@ -11,6 +11,6 @@ add_executable(client
 # server
 add_executable(server
     server/main.cpp
-    server/server.cpp
-    server/clientHandler.cpp
+    server/Server.cpp
+    server/ClientHandler.cpp
 )
