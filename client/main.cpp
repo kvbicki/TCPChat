@@ -1,6 +1,39 @@
 #include <iostream>
 #include "Client.h"
 #include <string>
+#include <thread>
+#include <atomic>
+
+std::atomic<bool> running{true};
+
+void receiveThreadFunc(Client& client) {
+    std::string msgr;
+    while (running) {
+        if (!client.ReceiveMessage(msgr)) {
+            std::cerr << "Failed to receive message or connection closed.\n";
+            running = false;
+            break;
+        }
+        std::cout << "Server: " << msgr << std::endl;
+    }
+}
+
+void sendThreadFunc(Client& client) {
+    std::string msgs;
+    while (running) {
+        std::getline(std::cin, msgs);
+        if (msgs == "quit") {
+            client.Close();
+            running = false;
+            break;
+        }
+        if (!client.SendMessage(msgs)) {
+            std::cerr << "Failed to send message\n";
+            running = false;
+            break;
+        }
+    }
+}
 
 int main() {
     Client client("127.0.0.1", 12345);
@@ -17,28 +50,12 @@ int main() {
 
     std::cout << "Client program started\n";
 
-    std::string msgs;
-    std::string msgr;
+    std::thread receiver(receiveThreadFunc, std::ref(client));
+    std::thread sender(sendThreadFunc, std::ref(client));
 
-    while (true) {
-        if (!client.ReceiveMessage(msgr)) {
-            std::cerr << "Failed to receive message or connection closed.\n";
-            break;
-        }
-
-        std::cout << "Server: " << msgr << std::endl;
-
-        std::getline(std::cin, msgs);
-        if (msgs == "quit") break;
-
-        if (!client.SendMessage(msgs)) {
-            std::cerr << "Failed to send message\n";
-            break;
-        }
-    }
-
-    std::cout << "Bye!" << std::endl;
-    client.Close();
+    sender.join();
+    running = false;
+    receiver.join();
 
     return 0;
 }
