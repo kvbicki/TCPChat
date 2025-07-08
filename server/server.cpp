@@ -1,6 +1,6 @@
 #include "Server.h"
 #include "ClientHandler.h"
-#include <iostream>
+
 
 #pragma comment(lib,"ws2_32.lib")
 
@@ -48,6 +48,14 @@ bool Server::Setup() {
     return true;
 }
 
+bool Server::SendMessage(const std::string& message, SOCKET clientSocket) {
+    int bytesSent = send(clientSocket, message.c_str(), static_cast<int>(message.size()), 0);
+    if (bytesSent == SOCKET_ERROR) {
+        std::cerr << "Send failed\n";
+        return false;
+    }
+    return true;
+}
 void Server::Run() {
     while (true) {
         SOCKET clientSocket = accept(listenSocket, nullptr, nullptr);
@@ -55,7 +63,10 @@ void Server::Run() {
             std::cerr << "Accept failed" << std::endl;
             continue;
         }
-
+        if (!SendMessage("What's your nick?\r\n",clientSocket)) {
+            std::cerr << "Failed to send message\n";
+        }
+        
         std::cout << "Client connected!" << std::endl;
 
         std::thread t([clientSocket]() {

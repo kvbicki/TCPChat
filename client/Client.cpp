@@ -57,6 +57,21 @@ bool Client::SendMessage(const std::string& message) {
     }
     return true;
 }
+bool Client::ReceiveMessage(std::string& message) {
+    char buffer[1024];
+    int bytesReceived = recv(sock, buffer, sizeof(buffer) - 1, 0);
+    if (bytesReceived > 0) {
+        buffer[bytesReceived] = '\0'; // zakończ string
+        message = buffer;
+        return true;
+    } else if (bytesReceived == 0) {
+        std::cerr << "Connection closed by server\n";
+    } else {
+        std::cerr << "Receive failed\n";
+    }
+    return false;
+}
+
 
 void Client::Close() {
     if (sock != INVALID_SOCKET) {
