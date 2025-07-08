@@ -1,5 +1,6 @@
 #include <iostream>
 #include "Client.h"
+#include <string>
 
 int main() {
     Client client("127.0.0.1", 12345);
@@ -16,10 +17,15 @@ int main() {
 
     std::cout << "Client program started\n";
 
-    if (!client.SendMessage("hello there!")) {
-        std::cerr << "Failed to send message\n";
+    std::string msg;
+    while(msg != "quit"){
+        
+        std::getline(std::cin, msg);
+        if (!client.SendMessage(msg)) {
+            std::cerr << "Failed to send message\n";
+        }
     }
-
+    std::cout << "Bye!" << std::endl;
     client.Close();
 
     return 0;
