@@ -37,7 +37,7 @@ int main(){
     inet_pton(AF_INET,serveraddress.c_str(),&(serveraddr.sin_addr));
 
 
-    if(connect(s, reinterpret_cast<sockaddr*>(serveraddr), sizeof(serveraddr)) == SOCKET_ERROR){
+    if(connect(s, reinterpret_cast<sockaddr*>(&serveraddr), sizeof(serveraddr)) == SOCKET_ERROR){
         cout << "not able to connect to server" << endl;
         closesocket(s);
         WSACleanup();
@@ -48,7 +48,13 @@ int main(){
     //send/recv
 
     cout << "client program started" << endl;
-
+    string message = "hello there!";
+    int bytesent;
+    bytesent = send(s,message.c_str(), message.length(),0);
+    if(bytesent == SOCKET_ERROR){
+        cout << "send failed" << endl;
+    }
+    closesocket(s);
     WSACleanup();
     return 0;
 }
