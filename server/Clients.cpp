@@ -29,3 +29,9 @@ void Clients::broadcast(Client *client,const std::string& message){
         int bytesSent = send(c.socket, fullMessage.c_str(), static_cast<int>(fullMessage.size()), 0);
     }
 }
+
+void Clients::broadcast(const std::string& message){
+    for (auto& c: clients){
+        int bytesSent = send(c.socket, message.c_str(), static_cast<int>(message.size()), 0);
+    }
+}

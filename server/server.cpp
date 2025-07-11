@@ -65,8 +65,9 @@ void Server::Run() {
         if (!SendMessage("What's your nick?\r",clientSocket)) {
             std::cerr << "Failed to send message\n";
         }
-        std::cout << "Client connected!" << std::endl;
+        const std::string m = "Client connected!";
 
+        
         std::thread t([this,clientSocket]() {
             ClientHandler handler(clientSocket, clients);
             handler.HandleClient();
