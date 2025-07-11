@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "ClientHandler.h"
+#include "Clients.h"
 
 
 #pragma comment(lib,"ws2_32.lib")
@@ -58,6 +59,7 @@ bool Server::SendMessage(const std::string& message, SOCKET clientSocket) {
 }
 void Server::Run() {
     while (true) {
+        Clients c;
         SOCKET clientSocket = accept(listenSocket, nullptr, nullptr);
         if (clientSocket == INVALID_SOCKET) {
             std::cerr << "Accept failed" << std::endl;

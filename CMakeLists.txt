@@ -14,4 +14,5 @@ add_executable(server
     server/main.cpp
     server/Server.cpp
     server/ClientHandler.cpp
+    server/Clients.cpp
 )
