@@ -13,8 +13,10 @@ class Clients{
 private:
     std::vector<Client> clients;
 public:
+    Clients(){};
+    ~Clients();
     void addClient(SOCKET socket, const std::string& nickname);
     void remClient(SOCKET socket);
-    void findBySocket(SOCKET socket);
-    void broadcast();
+    Client* findBySocket(SOCKET socket);
+    void broadcast(Client client,const std::string& message);
 };

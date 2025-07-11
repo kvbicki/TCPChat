@@ -12,3 +12,18 @@ Client* Clients::findBySocket(SOCKET socket){
         }
     }
 }
+
+void Clients::remClient(SOCKET socket){
+    for (auto it = clients.begin(); it != clients.end(); ) {
+        if (it->socket == socket) {
+            it = clients.erase(it);
+        } else {
+            ++it;
+        }
+    }
+}
+void Clients::broadcast(Client client,const std::string& message){
+    for(auto& client:clients){
+        std::cout << "[" << nickname << "]: " << message << std::endl;
+    }
+}
