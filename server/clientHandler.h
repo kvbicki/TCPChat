@@ -2,13 +2,15 @@
 #include <WinSock2.h>
 #include <iostream>
 #include <string>
+#include "Clients.h"
 
 class ClientHandler {
 private:
     SOCKET clientSocket;
     std::string nickname;
+    Clients& clients;
 
 public:
-    ClientHandler(SOCKET socket);
+    ClientHandler(SOCKET socket,Clients& clientsRef);
     void HandleClient();
 };

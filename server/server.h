@@ -4,12 +4,14 @@
 #include <thread>
 #include <string>
 #include <iostream>
+#include "Clients.h"
+#include "clientHandler.h"
 
 class Server {
 private:
     SOCKET listenSocket;
     int port;
-
+    Clients clients;
 public:
     Server(int port);
     ~Server();

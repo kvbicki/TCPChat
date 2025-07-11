@@ -1,10 +1,9 @@
 #include "ClientHandler.h"
-#include <iostream>
+#include "Clients.h"
 
-ClientHandler::ClientHandler(SOCKET socket) : clientSocket(socket) {}
+ClientHandler::ClientHandler(SOCKET socket, Clients& clientsRef) : clientSocket(socket), clients(clientsRef){}
 
 void ClientHandler::HandleClient() {
-
     char buffer[4096];
     int bytesRecvd = recv(clientSocket, buffer, sizeof(buffer), 0);
     if (bytesRecvd <= 0) {
@@ -12,7 +11,10 @@ void ClientHandler::HandleClient() {
         closesocket(clientSocket);
         return;
     }
+
     nickname = std::string(buffer, bytesRecvd);
+    clients.addClient(clientSocket,nickname);
+
     std::cout << "Client connected with nickname: " << nickname << std::endl;
 
     while (true) {
@@ -20,6 +22,7 @@ void ClientHandler::HandleClient() {
         bytesRecvd = recv(clientSocket, buffer, sizeof(buffer), 0);
         if (bytesRecvd > 0) {
             std::string message(buffer, bytesRecvd);
+            clients.broadcast(clients.findBySocket(clientSocket),message);
             if (message == "quit") {
                 std::cout << nickname << " disconnected." << std::endl;
                 break;
