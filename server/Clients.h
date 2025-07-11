@@ -19,4 +19,5 @@ public:
     void remClient(SOCKET socket);
     Client* findBySocket(SOCKET socket);
     void broadcast(Client *client,const std::string& message);
+    void broadcast(const std::string& message);
 };
