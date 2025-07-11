@@ -22,8 +22,10 @@ void Clients::remClient(SOCKET socket){
         }
     }
 }
-void Clients::broadcast(Client client,const std::string& message){
-    for(auto& client:clients){
-        std::cout << "[" << nickname << "]: " << message << std::endl;
+void Clients::broadcast(Client *client,const std::string& message){
+
+    std::string fullMessage = "[" + client->nickname + "]: " + message;
+    for (auto& c: clients){
+        int bytesSent = send(c.socket, fullMessage.c_str(), static_cast<int>(fullMessage.size()), 0);
     }
 }

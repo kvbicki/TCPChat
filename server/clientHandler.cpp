@@ -14,12 +14,15 @@ void ClientHandler::HandleClient() {
 
     nickname = std::string(buffer, bytesRecvd);
     clients.addClient(clientSocket,nickname);
+
     std::cout << "Client connected with nickname: " << nickname << std::endl;
+
     while (true) {
         ZeroMemory(buffer, sizeof(buffer));
         bytesRecvd = recv(clientSocket, buffer, sizeof(buffer), 0);
         if (bytesRecvd > 0) {
             std::string message(buffer, bytesRecvd);
+            clients.broadcast(clients.findBySocket(clientSocket),message);
             if (message == "quit") {
                 std::cout << nickname << " disconnected." << std::endl;
                 break;
