@@ -1,45 +1,72 @@
 #include "ClientHandler.h"
 #include "Clients.h"
 
-ClientHandler::ClientHandler(SOCKET socket, Clients& clientsRef) : clientSocket(socket), clients(clientsRef){}
+ClientHandler::ClientHandler(SOCKET socket, Clients& clientsRef) 
+    : clientSocket(socket), clients(clientsRef) {}
+
+
+void ClientHandler::Quit(){
+    
+}
 
 void ClientHandler::HandleClient() {
     char buffer[4096];
-    int bytesRecvd = recv(clientSocket, buffer, sizeof(buffer), 0);
+    
+
+    int bytesRecvd = recv(clientSocket, buffer, sizeof(buffer) - 1, 0); 
     if (bytesRecvd <= 0) {
-        std::cout << "Failed to receive nickname." << std::endl;
+        std::cerr << "Failed to receive nickname. Error: " << WSAGetLastError() << std::endl;
+        closesocket(clientSocket);
+        return;
+    }
+    buffer[bytesRecvd] = '\0';
+    nickname = std::string(buffer);
+
+
+    if (!clients.addClient(clientSocket, nickname)) {
+        std::cerr << "Failed to add client to list" << std::endl;
         closesocket(clientSocket);
         return;
     }
 
-    nickname = std::string(buffer, bytesRecvd);
-    clients.addClient(clientSocket,nickname);
-    std::string m = "Client connected with nickname " + nickname;
-    std::cout << m << std::endl;
-    clients.broadcast(m);
+    std::string welcomeMsg = nickname + " has joined the chat.";
+    std::cout << welcomeMsg << std::endl;
+    clients.broadcast(welcomeMsg);
 
     while (true) {
         ZeroMemory(buffer, sizeof(buffer));
-        bytesRecvd = recv(clientSocket, buffer, sizeof(buffer), 0);
+        bytesRecvd = recv(clientSocket, buffer, sizeof(buffer) - 1, 0);
+
         if (bytesRecvd > 0) {
-            
-            std::string message(buffer, bytesRecvd);
+            buffer[bytesRecvd] = '\0';
+            std::string message(buffer);
 
             if (message == "/quit") {
-                m = nickname + " disconnected.";
-                clients.broadcast(m);
-                std::cout << nickname << " disconnected." << std::endl;           
+                std::string leaveMsg = nickname + " has left the chat.";
+                clients.broadcast(leaveMsg);
+                std::cout << leaveMsg << std::endl;
                 break;
             }
+            else if (message == "/list"){
+                clients.clientList(clientSocket);
+            }
 
-            clients.broadcast(clients.findBySocket(clientSocket),message);
-            std::cout << "[" << nickname << "]: " << message << std::endl;
-
-        } else {
-            std::cout << "recv failed or connection closed by " << nickname << std::endl;
+            else if (Client* sender = clients.findBySocket(clientSocket)) {
+                clients.broadcast(sender, message);
+                std::cout << "[" << nickname << "]: " << message << std::endl;
+            }
+        } 
+        else if (bytesRecvd == 0) {
+            std::cout << "Connection closed by " << nickname << std::endl;
+            break;
+        } 
+        else {
+            std::cerr << "recv failed for " << nickname << ". Error: " << WSAGetLastError() << std::endl;
             break;
         }
     }
+
+
     clients.remClient(clientSocket);
     shutdown(clientSocket, SD_BOTH);
     closesocket(clientSocket);

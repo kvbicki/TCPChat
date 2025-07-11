@@ -3,6 +3,7 @@
 #include <winsock2.h>
 #include <vector>
 #include <mutex>
+#include <algorithm>
 #pragma once
 
 struct Client{
@@ -17,9 +18,10 @@ private:
     std::mutex clientMutex;
 public:
     Clients(){};
-    void addClient(SOCKET socket, const std::string& nickname);
+    bool addClient(SOCKET socket, const std::string& nickname);
     void remClient(SOCKET socket);
     Client* findBySocket(SOCKET socket);
     void broadcast(Client *client,const std::string& message);
     void broadcast(const std::string& message);
+    bool clientList(SOCKET socket);
 };
