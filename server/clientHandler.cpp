@@ -24,13 +24,14 @@ void ClientHandler::HandleClient() {
         if (bytesRecvd > 0) {
             
             std::string message(buffer, bytesRecvd);
-            if (message == "quit") {
+
+            if (message == "/quit") {
                 m = nickname + " disconnected.";
                 clients.broadcast(m);
-                std::cout << nickname << " disconnected." << std::endl;
-                
+                std::cout << nickname << " disconnected." << std::endl;           
                 break;
             }
+
             clients.broadcast(clients.findBySocket(clientSocket),message);
             std::cout << "[" << nickname << "]: " << message << std::endl;
 
@@ -39,7 +40,7 @@ void ClientHandler::HandleClient() {
             break;
         }
     }
-
+    clients.remClient(clientSocket);
     shutdown(clientSocket, SD_BOTH);
     closesocket(clientSocket);
 }

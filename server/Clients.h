@@ -2,6 +2,7 @@
 #include <string>
 #include <winsock2.h>
 #include <vector>
+#include <mutex>
 #pragma once
 
 struct Client{
@@ -13,6 +14,7 @@ struct Client{
 class Clients{
 private:
     std::vector<Client> clients;
+    std::mutex clientMutex;
 public:
     Clients(){};
     void addClient(SOCKET socket, const std::string& nickname);
