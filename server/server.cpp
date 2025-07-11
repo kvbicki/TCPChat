@@ -62,7 +62,7 @@ void Server::Run() {
             std::cerr << "Accept failed" << std::endl;
             continue;
         }
-        if (!SendMessage("What's your nick?\r",clientSocket)) {
+        if (!SendMessage("What's your nick?\r\n",clientSocket)) {
             std::cerr << "Failed to send message\n";
         }
         const std::string m = "Client connected!";

@@ -28,7 +28,7 @@ void sendThreadFunc(Client& client) {
             running = false;
             break;
         }
-        if (msgs == "quit") {
+        if (msgs == "/quit") {
             client.Close();
             running = false;
             break;

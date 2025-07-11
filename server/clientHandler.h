@@ -13,4 +13,5 @@ private:
 public:
     ClientHandler(SOCKET socket,Clients& clientsRef);
     void HandleClient();
+    void Quit();
 };
