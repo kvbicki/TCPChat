@@ -3,6 +3,7 @@
 #include <iostream>
 #include <string>
 #include "Clients.h"
+#include <sstream>
 
 class ClientHandler {
 private:

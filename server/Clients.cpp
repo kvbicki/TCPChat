@@ -23,6 +23,15 @@ Client* Clients::findBySocket(SOCKET socket){
     return nullptr;
 }
 
+Client* Clients::findByNickname(std::string nickname){
+    for(auto& client: clients){
+        if(client.nickname == nickname){
+            return &client;
+        }
+    }
+    return nullptr;
+}
+
 void Clients::remClient(SOCKET socket){
     std::lock_guard<std::mutex> lock(clientMutex);
     for (auto it = clients.begin(); it != clients.end(); ) {
@@ -75,5 +84,26 @@ bool Clients::clientList(SOCKET socket) {
         return false;
     }
 
+    return true;
+}
+
+bool Clients::privateMessage(std::string& r_nickname,std::string message,SOCKET socket){
+    std::lock_guard<std::mutex> lock(clientMutex);
+    Client* receiver;
+    receiver = findByNickname(r_nickname);
+    Client* sender;
+    sender = findBySocket(socket);
+    if (sender == receiver){
+        return false;
+    }
+    std::string fullSendMessage = "[from "+ sender->nickname + "] " + message; 
+    int bytesSent1 = send(receiver->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
+    fullSendMessage = "[to "+ receiver->nickname + "] " + message; 
+    int bytesSent2 = send(sender->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
+
+    if (bytesSent1 == SOCKET_ERROR || bytesSent2 == SOCKET_ERROR) {
+        std::cerr << "Send failed\n";
+        return false;
+    }
     return true;
 }
