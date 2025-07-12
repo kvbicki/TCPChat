@@ -59,7 +59,9 @@ void ClientHandler::HandleClient() {
                     std::string fullMessage = message.substr(secondSpace + 1);
                     // std::cout << fullMessage << std::endl;
 
-                    clients.privateMessage(receiver,fullMessage,clientSocket);
+                    if(!clients.privateMessage(receiver,fullMessage,clientSocket)){
+                        std::cout << "Unable to send private message"<< std::endl;
+                    }
             }
 
             else if (Client* sender = clients.findBySocket(clientSocket)) {

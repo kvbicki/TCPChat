@@ -93,7 +93,9 @@ bool Clients::privateMessage(std::string& r_nickname,std::string message,SOCKET 
     receiver = findByNickname(r_nickname);
     Client* sender;
     sender = findBySocket(socket);
-
+    if (sender == receiver){
+        return false;
+    }
     std::string fullSendMessage = "[from "+ sender->nickname + "] " + message; 
     int bytesSent1 = send(receiver->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
     fullSendMessage = "[to "+ sender->nickname + "] " + message; 
