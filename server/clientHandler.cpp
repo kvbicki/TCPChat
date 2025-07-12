@@ -52,11 +52,14 @@ void ClientHandler::HandleClient() {
             }
             else if (message.substr(0,4) == "/msg"){
                     size_t firstSpace = message.find(' ');
+                    
                     size_t secondSpace = message.find(' ', firstSpace + 1);
                     std::string receiver = message.substr(firstSpace + 1, secondSpace - firstSpace - 1);
-                    std::string message = message.substr(secondSpace + 1);
+                    // std::cout << receiver << std::endl;
+                    std::string fullMessage = message.substr(secondSpace + 1);
+                    // std::cout << fullMessage << std::endl;
 
-                    clients.privateMessage(receiver,message,clientSocket);
+                    clients.privateMessage(receiver,fullMessage,clientSocket);
             }
 
             else if (Client* sender = clients.findBySocket(clientSocket)) {

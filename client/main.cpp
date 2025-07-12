@@ -14,7 +14,7 @@ void receiveThreadFunc(Client& client) {
             running = false;
             break;
         }
-        std::cout << "Server: " << msgr << std::endl;
+        std::cout << msgr << std::endl;
     }
 }
 
