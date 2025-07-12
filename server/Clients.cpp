@@ -96,9 +96,9 @@ bool Clients::privateMessage(std::string& r_nickname,std::string message,SOCKET 
 
     std::string fullSendMessage = "[from "+ sender->nickname + "] " + message; 
     int bytesSent1 = send(receiver->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
-    std::string fullSendMessage = "[to "+ sender->nickname + "] " + message; 
-    int bytesSent2 = send(sender->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
-    
+    fullSendMessage = "[to "+ sender->nickname + "] " + message; 
+    int bytesSent2 = send(receiver->socket, fullSendMessage.c_str(), static_cast<int>(fullSendMessage.size()), 0);
+
     if (bytesSent1 == SOCKET_ERROR || bytesSent2 == SOCKET_ERROR) {
         std::cerr << "Send failed\n";
         return false;
