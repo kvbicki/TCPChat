@@ -41,14 +41,22 @@ void ClientHandler::HandleClient() {
             buffer[bytesRecvd] = '\0';
             std::string message(buffer);
 
-            if (message == "/quit") {
+            if (message.substr(0,5) == "/quit") {
                 std::string leaveMsg = nickname + " has left the chat.";
                 clients.broadcast(leaveMsg);
                 std::cout << leaveMsg << std::endl;
                 break;
             }
-            else if (message == "/list"){
+            else if (message.substr(0,5) == "/list"){
                 clients.clientList(clientSocket);
+            }
+            else if (message.substr(0,4) == "/msg"){
+                    size_t firstSpace = message.find(' ');
+                    size_t secondSpace = message.find(' ', firstSpace + 1);
+                    std::string receiver = message.substr(firstSpace + 1, secondSpace - firstSpace - 1);
+                    std::string message = message.substr(secondSpace + 1);
+
+                    clients.privateMessage(receiver,message,clientSocket);
             }
 
             else if (Client* sender = clients.findBySocket(clientSocket)) {

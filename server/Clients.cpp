@@ -23,6 +23,15 @@ Client* Clients::findBySocket(SOCKET socket){
     return nullptr;
 }
 
+Client* Clients::findByNickname(std::string nickname){
+    for(auto& client: clients){
+        if(client.nickname == nickname){
+            return &client;
+        }
+    }
+    return nullptr;
+}
+
 void Clients::remClient(SOCKET socket){
     std::lock_guard<std::mutex> lock(clientMutex);
     for (auto it = clients.begin(); it != clients.end(); ) {
@@ -75,5 +84,13 @@ bool Clients::clientList(SOCKET socket) {
         return false;
     }
 
+    return true;
+}
+
+bool Clients::privateMessage(std::string& nickname,std::string message,SOCKET sender){
+    std::lock_guard<std::mutex> lock(clientMutex);
+    Client* c;
+    c = findByNickname(nickname);
+    int bytesSent = send(c->socket, message.c_str(), static_cast<int>(message.size()), 0);
     return true;
 }
