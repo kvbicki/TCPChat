@@ -38,3 +38,36 @@ A multi-client chat system with:
 mkdir build && cd build
 cmake ..
 cmake --build .
+
+## 🏃‍♂️ Execution
+
+### Server
+| Component | Command       | Default Port |
+|-----------|--------------|-------------|
+| Server    | `./server`   | 12345       |
+
+### Client
+| Component | Command       | Connection Target         |
+|-----------|--------------|--------------------------|
+| Client    | `./client`   | 127.0.0.1:12345          |
+
+## ⌨️ Command Reference
+
+| Command   | Action               | Example                 |
+|-----------|----------------------|-------------------------|
+| `/quit`   | Disconnect           | `/quit`                 |
+| `/list`   | Show online users    | `/list`                 |
+| `/msg`    | Send private message | `/msg bob Hello there!` |
+
+## 📂 Project Structure
+
+```text
+├── client/
+│   ├── Client.cpp
+│   └── main.cpp
+├── server/
+│   ├── Clients.cpp
+│   ├── ClientHandler.cpp
+│   ├── Server.cpp
+│   └── main.cpp
+└── CMakeLists.txt
