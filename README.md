@@ -38,7 +38,7 @@ A multi-client chat system with:
 mkdir build && cd build
 cmake ..
 cmake --build .
-
+```
 ## 🏃‍♂️ Execution
 
 ### Server
